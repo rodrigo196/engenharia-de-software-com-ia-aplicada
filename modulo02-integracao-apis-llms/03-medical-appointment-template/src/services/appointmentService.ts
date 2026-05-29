@@ -82,4 +82,32 @@ export class AppointmentService {
         appointments.splice(index, 1);
     }
 
+    getAppointmentsForPatient(patientName: string, professionalId?: number) {
+        return appointments.filter(appointment =>
+            appointment.patientName.toLowerCase().trim() === patientName.toLowerCase().trim() &&
+            (professionalId === undefined || appointment.professionalId === professionalId)
+        );
+    }
+
+    getProfessionals(specialty?: string) {
+        if (!specialty) return professionals;
+        return professionals.filter(p => p.specialty.toLowerCase().includes(specialty.toLowerCase()));
+    }
+
+    rescheduleAppointment(professionalId: number, patientName: string, oldDate: Date, newDate: Date, reason?: string) {
+        const appointment = this.getAppointmentsForProfessional(professionalId, oldDate, patientName);
+        if (!appointment) {
+            throw new Error('Agendamento original não encontrado para reagendamento');
+        }
+
+        if (!this.checkAvailability(professionalId, newDate)) {
+            throw new Error('Novo horário indisponível para este profissional');
+        }
+
+        appointment.date = newDate.toISOString();
+        if (reason !== undefined) {
+            appointment.reason = reason;
+        }
+        return appointment;
+    }
 }

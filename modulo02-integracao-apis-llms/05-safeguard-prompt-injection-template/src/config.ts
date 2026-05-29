@@ -46,7 +46,7 @@ export const config: ModelConfig = {
     // 'qwen/qwen-2.5-7b-instruct',
     // 'qwen/qwen3-coder-next',
     // 'upstage/solar-pro-3:free',
-    'qwen/qwen-2.5-7b-instruct',// unsafe!
+    'qwen/qwen3-30b-a3b-instruct-2507',// unsafe!
   ],
 
   guardrailsModel: 'openai/gpt-oss-safeguard-20b',

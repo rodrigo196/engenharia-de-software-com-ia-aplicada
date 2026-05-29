@@ -9,6 +9,10 @@ import type { BaseMessage } from '@langchain/core/messages';
 
 import { createSchedulerNode } from './nodes/schedulerNode.ts';
 import { createCancellerNode } from './nodes/cancellerNode.ts';
+import { createReschedulerNode } from './nodes/reschedulerNode.ts';
+import { createAvailabilityNode } from './nodes/availabilityNode.ts';
+import { createListAppointmentsNode } from './nodes/listAppointmentsNode.ts';
+import { createListProfessionalsNode } from './nodes/listProfessionalsNode.ts';
 import { createIdentifyIntentNode} from "./nodes/identifyIntentNode.ts";
 import { createMessageGeneratorNode } from "./nodes/messageGeneratorNode.ts";
 
@@ -23,15 +27,21 @@ const AppointmentStateAnnotation = z.object({
 
   patientName: z.string().optional(),
 
-  intent: z.enum(['schedule', 'cancel', 'unknown']).optional(),
+  intent: z.enum(['schedule', 'cancel', 'reschedule', 'list_appointments', 'list_professionals', 'check_availability', 'unknown']).optional(),
   professionalId: z.number().optional(),
   professionalName: z.string().optional(),
   datetime: z.string().optional(),
+  originalDatetime: z.string().optional(),
+  newDatetime: z.string().optional(),
   reason: z.string().optional(),
+  specialty: z.string().optional(),
 
   actionSuccess: z.boolean().optional(),
   actionError: z.string().optional(),
   appointmentData: z.any().optional(),
+  appointmentsList: z.any().optional(),
+  professionalsList: z.any().optional(),
+  availabilityStatus: z.boolean().optional(),
 
   error: z.string().optional(),
 });
@@ -49,6 +59,10 @@ export function buildAppointmentGraph(llmClient: OpenRouterService,
     .addNode('identifyIntent', createIdentifyIntentNode(llmClient))
     .addNode('schedule', createSchedulerNode(appointmentService))
     .addNode('cancel', createCancellerNode(appointmentService))
+    .addNode('reschedule', createReschedulerNode(appointmentService))
+    .addNode('check_availability', createAvailabilityNode(appointmentService))
+    .addNode('list_appointments', createListAppointmentsNode(appointmentService))
+    .addNode('list_professionals', createListProfessionalsNode(appointmentService))
     .addNode('message', createMessageGeneratorNode(llmClient))
 
     // Flow
@@ -68,12 +82,20 @@ export function buildAppointmentGraph(llmClient: OpenRouterService,
       {
         schedule: 'schedule',
         cancel: 'cancel',
+        reschedule: 'reschedule',
+        check_availability: 'check_availability',
+        list_appointments: 'list_appointments',
+        list_professionals: 'list_professionals',
         message: 'message',
       }
     )
 
     .addEdge('schedule', 'message')
     .addEdge('cancel', 'message')
+    .addEdge('reschedule', 'message')
+    .addEdge('check_availability', 'message')
+    .addEdge('list_appointments', 'message')
+    .addEdge('list_professionals', 'message')
     .addEdge('message', END);
 
   return workflow.compile();
