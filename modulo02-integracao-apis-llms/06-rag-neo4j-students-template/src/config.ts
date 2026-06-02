@@ -3,7 +3,8 @@ export const config = {
   httpReferer: '',
   xTitle: 'IA Devs - Sales Analytics Reporter',
   models: [
-    'meta-llama/llama-3.1-8b-instruct',
+  //'meta-llama/llama-3.1-8b-instruct',
+  'openai/gpt-oss-20b'
   ],
   provider: {
     sort: {

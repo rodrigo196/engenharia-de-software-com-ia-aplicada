@@ -69,7 +69,6 @@ export function createCypherGeneratorNode(
 
 
       return {
-        isMultiStep: false,
         query: data?.query,
       };
     } catch (error: any) {

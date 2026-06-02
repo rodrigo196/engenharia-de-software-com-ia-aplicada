@@ -13,7 +13,7 @@ export function createQueryPlannerNode(llmClient: OpenRouterService) {
       
       const { data, error} = await llmClient.generateStructured(
         systemPrompt, 
-        userPrompt,
+        userPrompt, 
       QueryAnalysisSchema);
 
       if (error) {
