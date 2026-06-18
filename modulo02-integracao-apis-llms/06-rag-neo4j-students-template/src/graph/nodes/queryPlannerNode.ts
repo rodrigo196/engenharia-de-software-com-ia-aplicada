@@ -20,7 +20,7 @@ export function createQueryPlannerNode(llmClient: OpenRouterService) {
         console.error('❌ Error from LLM response:', error);
         return {
           error,
-          isMultiStep: true,
+          isMultiStep: false,
         };
       }
 

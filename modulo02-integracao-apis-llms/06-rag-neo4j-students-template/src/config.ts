@@ -5,6 +5,9 @@ export const config = {
   models: [
   //'meta-llama/llama-3.1-8b-instruct',
   'openai/gpt-oss-20b'
+  //'openrouter/owl-alpha',
+  //'arcee-ai/trinity-large-preview:free',
+  //'openai/gpt-4o-mini-tts-2025-12-15'
   ],
   provider: {
     sort: {
@@ -18,7 +21,7 @@ export const config = {
     username: "neo4j",
     password: "password",
   },
-  maxCorrectionAttempts: 1,
+  maxCorrectionAttempts: 3,
   maxSubQuestions: 3,
 };
 
